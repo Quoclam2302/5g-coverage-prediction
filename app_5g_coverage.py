@@ -114,7 +114,12 @@ with tab1:
         mid_lat = (bts_lat + in_lat) / 2.0
         mid_lon = (bts_lon + in_lon) / 2.0
         
-        m_link = folium.Map(location=[mid_lat, mid_lon], zoom_start=14, tiles="OpenStreetMap")
+        m_link = folium.Map(
+            location=[mid_lat, mid_lon], 
+            zoom_start=14, 
+            tiles="https://mt1.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",
+            attr="Google Maps"
+        )
         
         # Điểm đặt trạm BTS
         folium.Marker(
@@ -267,7 +272,27 @@ with tab2:
             norm_weight = np.clip((pred_rsrp - (-125.0)) / ((-65.0) - (-125.0)), 0.05, 1.0)
             heat_data = [[flat_lat[i], flat_lon[i], float(norm_weight[i])] for i in range(len(flat_lat))]
             
-            m = folium.Map(location=[center_lat, center_lon], zoom_start=12, tiles="OpenStreetMap")
+            m = folium.Map(
+                location=[center_lat, center_lon], 
+                zoom_start=12, 
+                tiles="https://mt1.google.com/vt/lyrs=m&hl=vi&x={x}&y={y}&z={z}",
+                attr="Google Maps"
+            )
+            
+            # Cắm mốc khẳng định chủ quyền Hoàng Sa & Trường Sa của Việt Nam
+            folium.Marker(
+                [16.5367, 111.6094],
+                popup="<b>Quần đảo Hoàng Sa</b><br>Thuộc chủ quyền thành phố Đà Nẵng, Việt Nam",
+                tooltip="Quần đảo Hoàng Sa (Việt Nam)",
+                icon=folium.Icon(color="red", icon="flag", prefix="fa")
+            ).add_to(m)
+            
+            folium.Marker(
+                [8.6444, 111.9194],
+                popup="<b>Quần đảo Trường Sa</b><br>Thuộc chủ quyền tỉnh Khánh Hòa, Việt Nam",
+                tooltip="Quần đảo Trường Sa (Việt Nam)",
+                icon=folium.Icon(color="red", icon="flag", prefix="fa")
+            ).add_to(m)
             HeatMap(heat_data, radius=22, blur=18, min_opacity=0.3, max_zoom=13).add_to(m)
             folium.Marker(
                 [center_lat, center_lon],
